@@ -20,8 +20,8 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.TOKEN }}
         with:
-          source-directory: 'output'
-          destination-github-username: fitdate
+          source-directory: "output"
+          destination-github-username: ryuji-dev
           destination-repository-name: fit-fe-refactor
           user-email: ${{ secrets.EMAIL }}
           commit-message: ${{ github.event.commits[0].message }}

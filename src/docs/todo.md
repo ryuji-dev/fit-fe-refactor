@@ -4,15 +4,22 @@
 
 - [x] fit-fe repo를 FSD 폴더 구조로 리팩토링 (fit-fe → fit-fe-refactor)
 
-<!-- ## 2. 프로젝트 구조
+## 2. 배포 및 CI/CD
 
-- [ ] 각 레이어별 폴더 구조 정리
-  - [ ] entities
-  - [ ] features
-  - [ ] processes
-  - [ ] shared
+- [x] fit-fe-refactor 레포를 개인 깃허브 레포로 fork/복제
+- [ ] 개인 레포를 Vercel에 연결 (무료 플랜)
+- [ ] 환경 변수(.env.local, .env.production 등) Vercel에 등록
+  - [ ] 민감 정보는 깃허브에 올리지 않고 Vercel 환경 변수로 관리
+- [ ] 도메인 연결(필요 시)
+  - [ ] Vercel에서 custom domain 연결 및 HTTPS 적용
+- [ ] GitHub Actions로 CI/CD 파이프라인 구성
+  - [ ] PR/merge 시 빌드 및 테스트 자동화
+  - [ ] 필요 시 Vercel 배포 트리거 (Vercel GitHub 앱 연동 또는 webhook)
+- [ ] 배포 후 정상 동작 및 환경별 분리 확인
+  - [ ] production, preview 환경 구분
+  - [ ] 에러 및 로그 모니터링 설정
 
-## 3. 인증 관련
+<!-- ## 3. 인증 관련
 
 - [ ] 소셜 로그인 구현
 - [ ] 회원가입 프로세스

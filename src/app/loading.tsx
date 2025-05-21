@@ -1,1 +1,3 @@
-// 로딩 화면
+export default function LoadingPage() {
+  return <div>Loading...</div>;
+}

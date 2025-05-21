@@ -1,4 +1,10 @@
 // Airbnb 스타일 가이드
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export default {
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -22,11 +28,11 @@ export default {
   plugins: ["react", "@typescript-eslint", "prettier"],
   rules: {
     "prettier/prettier": "error",
-    "react/react-in-jsx-scope": "off", // React 17 이상부터 필요 없음
-    "import/prefer-default-export": "off", // named export 선호
-    "@typescript-eslint/explicit-function-return-type": "warn", // 함수 리턴 타입 권장
-    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }], // 언더바 붙인 인자 무시
-    "jsx-a11y/anchor-is-valid": "off", // next/link 쓰면 anchor 규칙 꺼야 할 때가 있음
+    "react/react-in-jsx-scope": "off",
+    "import/prefer-default-export": "off",
+    "@typescript-eslint/explicit-function-return-type": "warn",
+    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "jsx-a11y/anchor-is-valid": "off",
   },
   settings: {
     react: { version: "detect" },

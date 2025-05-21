@@ -1,1 +1,3 @@
-// 404 에러
+export default function NotFoundPage() {
+  return <div>Not Found</div>;
+}

@@ -13,9 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="select-none [&_img]:drag-none">
-        {children}
-      </body>
+      <body className="select-none [&_img]:drag-none">{children}</body>
     </html>
   );
 }

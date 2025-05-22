@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "NoonnuBasicGothicRegular";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noon-2410@1.0/NoonnuBasicGothicRegular.woff2")
-    format("woff2");
+  font-family: 'NoonnuBasicGothicRegular';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noon-2410@1.0/NoonnuBasicGothicRegular.woff2')
+    format('woff2');
   font-weight: normal;
   font-style: normal;
 }
@@ -16,7 +16,7 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100%;
-  font-family: "NoonnuBasicGothicRegular", sans-serif;
+  font-family: 'NoonnuBasicGothicRegular', sans-serif;
 }
 
 /* 모든 스크롤바 숨기기 */
@@ -42,7 +42,7 @@ a {
 }
 
 button {
-  background-color: transparent;
+  /* background-color: none; */
   cursor: pointer;
   display: flex;
   justify-content: center;

@@ -69,12 +69,6 @@ const config: Config = {
       animation: {
         'slide-down': 'slide-down 0.5s ease-out',
       },
-      height: {
-        'screen-dynamic': 'calc(var(--vh, 1vh) * 100)',
-      },
-      minHeight: {
-        'screen-dynamic': 'calc(var(--vh, 1vh) * 100)',
-      },
     },
   },
   plugins: [

@@ -2,7 +2,15 @@ import type { Config } from 'tailwindcss';
 
 const config: Config = {
   darkMode: ['class'],
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: [
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/widgets/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/features/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/entities/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/shared/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
   theme: {
     extend: {
       colors: {
@@ -60,6 +68,12 @@ const config: Config = {
       },
       animation: {
         'slide-down': 'slide-down 0.5s ease-out',
+      },
+      height: {
+        'screen-dynamic': 'calc(var(--vh, 1vh) * 100)',
+      },
+      minHeight: {
+        'screen-dynamic': 'calc(var(--vh, 1vh) * 100)',
       },
     },
   },

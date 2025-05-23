@@ -13,8 +13,8 @@ const LANDING_TEXT = {
 
 const LadingHeader = () => (
   <div className="absolute right-6 top-6 flex gap-4">
-    <Link href="/login">{LANDING_TEXT.login}</Link>
-    <Link href="/signup">{LANDING_TEXT.signup}</Link>
+    <Link href="/auth">{LANDING_TEXT.login}</Link>
+    <Link href="/auth/signup">{LANDING_TEXT.signup}</Link>
   </div>
 );
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { CircleX } from 'lucide-react';
 import { UseFormRegister, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
-import { SignUpFormValues } from '@/entities/user/model/signup.schema';
+import { SignUpFormValues } from '@/entities/auth/signup.schema';
 
 interface ProfileImageSectionProps {
   setValue: UseFormSetValue<SignUpFormValues>;

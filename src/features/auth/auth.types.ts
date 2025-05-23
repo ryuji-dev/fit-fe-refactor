@@ -1,22 +1,22 @@
 import type { Merge } from 'react-hook-form';
 import { UseFormRegister, FieldError, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
-import { SignUpFormValues } from '@/entities/user/model/signup.schema';
+import { SignupFormValues } from '@/entities/auth/signup.types';
 
 export interface GenderSelectorProps {
-  register: UseFormRegister<SignUpFormValues>;
+  register: UseFormRegister<SignupFormValues>;
   required?: boolean;
   selectedGender?: string;
   error?: string;
 }
 
 export interface RegionSelectorProps {
-  register: UseFormRegister<SignUpFormValues>;
+  register: UseFormRegister<SignupFormValues>;
   required?: boolean;
   error?: string;
 }
 
 export interface MbtiSelectorProps {
-  register: UseFormRegister<SignUpFormValues>;
+  register: UseFormRegister<SignupFormValues>;
   required?: boolean;
   error?: string;
 }
@@ -27,9 +27,9 @@ export interface MultiToggleButtonGroupProps {
   options: string[];
   required?: boolean;
   requiredCount?: number;
-  register: UseFormRegister<SignUpFormValues>;
-  setValue: UseFormSetValue<SignUpFormValues>;
-  trigger: UseFormTrigger<SignUpFormValues>;
+  register: UseFormRegister<SignupFormValues>;
+  setValue: UseFormSetValue<SignupFormValues>;
+  trigger: UseFormTrigger<SignupFormValues>;
   error?: FieldError | FieldError[] | Merge<FieldError, (FieldError | undefined)[]> | undefined;
   gridCols?: string;
   isLoading?: boolean;
@@ -49,4 +49,21 @@ export interface SignupButtonProps extends React.ButtonHTMLAttributes<HTMLButton
   loadingText?: string;
   completedText?: string;
   defaultText: string;
+}
+
+export type SocialProvider = 'naver' | 'kakao' | 'google';
+
+export interface SocialConfig {
+  icon: any;
+  bgColor: string;
+  textColor: string;
+  iconSize: string;
+  iconPosition: string;
+  label: string;
+  border?: string;
+}
+
+export interface SocialLoginButtonProps {
+  provider: SocialProvider;
+  onClick?: () => void;
 }

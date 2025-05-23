@@ -3,7 +3,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signupSchema, SignUpFormValues } from '@/entities/user/model/signup.schema';
+import { SignupFormValues } from '@/entities/auth/signup.types';
+import { signupSchema } from '@/entities/auth/signup.schema';
 import Input from '@/shared/components/ui/input';
 import { SignupButton, SignupSubmitButton } from './SignupButton';
 import GenderSelector from './GenderSelector';
@@ -13,7 +14,7 @@ import MultiToggleButtonGroup from './MultiToggleButtonGroup';
 import ProfileImageSection from './ProfileImageSection';
 
 export default function SignupForm() {
-  const methods = useForm<SignUpFormValues>({
+  const methods = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     mode: 'onChange',
     defaultValues: {
@@ -95,7 +96,7 @@ export default function SignupForm() {
     }
   };
 
-  const onSubmit = (data: SignUpFormValues) => {
+  const onSubmit = (data: SignupFormValues) => {
     console.log(data);
     // TODO: 회원가입 로직 구현
   };
@@ -151,6 +152,7 @@ export default function SignupForm() {
           <p className="mt-2 text-sm text-zinc-600">추가 정보를 입력해주세요</p>
         </header>
 
+        {/* 회원가입 폼 */}
         <section className="relative">
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-violet-500/10 to-rose-500/10 blur-xl" />
           <FormProvider {...methods}>
@@ -163,6 +165,7 @@ export default function SignupForm() {
                 <div className="space-y-4">
                   <h2 className="text-lg font-semibold text-zinc-900">기본 정보</h2>
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {/* 이메일 */}
                     <div className="col-span-2">
                       <div className="flex gap-2">
                         <div className="flex-1">
@@ -189,6 +192,7 @@ export default function SignupForm() {
                         />
                       </div>
                     </div>
+                    {/* 인증 코드 */}
                     {showVerificationCode && !isEmailVerified && (
                       <div className="animate-slide-down col-span-2">
                         <div className="flex gap-2">
@@ -220,6 +224,7 @@ export default function SignupForm() {
                         </div>
                       </div>
                     )}
+                    {/* 비밀번호 */}
                     <div className="col-span-2">
                       <Input
                         label="비밀번호"
@@ -240,6 +245,7 @@ export default function SignupForm() {
                         isDirty={dirtyFields.confirmPassword}
                       />
                     </div>
+                    {/* 개인 정보 */}
                     <Input
                       label="이름"
                       placeholder="이름을 입력해주세요"
@@ -312,6 +318,7 @@ export default function SignupForm() {
                 </div>
                 <div className="space-y-4">
                   <h2 className="text-lg font-semibold text-zinc-900">자기소개</h2>
+                  {/* 자기소개 */}
                   <div className="space-y-6">
                     <MultiToggleButtonGroup
                       label="관심사"

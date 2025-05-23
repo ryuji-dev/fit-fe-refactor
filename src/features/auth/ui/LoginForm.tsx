@@ -39,7 +39,7 @@ export default function LoginForm() {
     <main className="mb-20 flex min-h-screen items-center justify-center bg-gradient-to-br from-rose-50 to-red-50">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
         <header className="mb-8 text-center">
-          <h1 className="mb-2 text-2xl font-bold text-gray-900">로그인</h1>
+          <h1 className="mb-2 text-2xl font-bold text-zinc-900">로그인</h1>
         </header>
 
         {/* 로그인 폼 */}

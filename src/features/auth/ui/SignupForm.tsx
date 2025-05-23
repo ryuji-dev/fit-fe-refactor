@@ -12,6 +12,8 @@ import RegionSelector from './RegionSelector';
 import MbtiSelector from './MbtiSelector';
 import MultiToggleButtonGroup from './MultiToggleButtonGroup';
 import ProfileImageSection from './ProfileImageSection';
+import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 export default function SignupForm() {
   const methods = useForm<SignupFormValues>({
@@ -143,8 +145,14 @@ export default function SignupForm() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-rose-50 px-4 pb-24 pt-10">
+    <main className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-rose-50 px-4 pb-24">
       <div className="mx-auto max-w-2xl">
+        <Link
+          href="/auth"
+          className="inline-flex items-center pt-2 text-zinc-500 hover:text-zinc-600 active:text-zinc-700"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Link>
         <header className="mb-8 text-center">
           <h1 className="bg-gradient-to-r from-violet-600 to-rose-600 bg-clip-text text-2xl font-bold text-transparent">
             회원가입
@@ -164,9 +172,9 @@ export default function SignupForm() {
               <div className="space-y-6">
                 <div className="space-y-4">
                   <h2 className="text-lg font-semibold text-zinc-900">기본 정보</h2>
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
                     {/* 이메일 */}
-                    <div className="col-span-2">
+                    <div className="w-full lg:col-span-2">
                       <div className="flex gap-2">
                         <div className="flex-1">
                           <Input
@@ -194,7 +202,7 @@ export default function SignupForm() {
                     </div>
                     {/* 인증 코드 */}
                     {showVerificationCode && !isEmailVerified && (
-                      <div className="animate-slide-down col-span-2">
+                      <div className="animate-slide-down w-full lg:col-span-2">
                         <div className="flex gap-2">
                           <div className="flex-1">
                             <Input
@@ -225,7 +233,7 @@ export default function SignupForm() {
                       </div>
                     )}
                     {/* 비밀번호 */}
-                    <div className="col-span-2">
+                    <div className="w-full lg:col-span-2">
                       <Input
                         label="비밀번호"
                         placeholder="비밀번호를 입력해주세요"
@@ -235,7 +243,7 @@ export default function SignupForm() {
                         isDirty={dirtyFields.password}
                       />
                     </div>
-                    <div className="col-span-2">
+                    <div className="w-full lg:col-span-2">
                       <Input
                         label="비밀번호 확인"
                         placeholder="비밀번호를 다시 입력해주세요"

@@ -1,7 +1,5 @@
+import MyPageContainer from '@/features/my/ui/MyPageContainer';
+
 export default function MyPage() {
-  return (
-    <div>
-      <h1>마이페이지</h1>
-    </div>
-  );
+  return <MyPageContainer />;
 }

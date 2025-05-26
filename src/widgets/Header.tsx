@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/components/ui/button';
-import Logo from '@/public/assets/images/logo.png';
+import Logo from '@/assets/images/logo.png';
 
 export default function Header() {
   const router = useRouter();

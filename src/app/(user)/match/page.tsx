@@ -1,7 +1,5 @@
+import MatchContainer from '@/features/match/ui/MatchContainer';
+
 export default function MatchPage() {
-  return (
-    <div>
-      <h1>매칭</h1>
-    </div>
-  );
+  return <MatchContainer />;
 }

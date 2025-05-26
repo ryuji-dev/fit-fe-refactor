@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import naverIcon from '@/public/assets/icons/naver.png';
-import kakaoIcon from '@/public/assets/icons/kakao.png';
-import googleIcon from '@/public/assets/icons/google.png';
+import naverIcon from '@/assets/icons/naver.png';
+import kakaoIcon from '@/assets/icons/kakao.png';
+import googleIcon from '@/assets/icons/google.png';
 import { SocialProvider, SocialConfig, SocialLoginButtonProps } from '@/features/auth/auth.types';
 
 const socialConfig: Record<SocialProvider, SocialConfig> = {

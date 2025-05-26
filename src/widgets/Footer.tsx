@@ -21,9 +21,7 @@ export default function Footer() {
         <ul className="flex w-full justify-around">
           {footerMenu.map((item) => {
             const isCurrent = pathname === item.href;
-            const linkColorClass = isCurrent
-              ? 'text-violet-500 text-base'
-              : 'text-gray-400 text-sm';
+            const linkColorClass = isCurrent ? 'text-violet-500 text-sm' : 'text-gray-400 text-sm';
             return (
               <li key={item.href}>
                 <Link href={item.href} className={`flex flex-col items-center ${linkColorClass}`}>

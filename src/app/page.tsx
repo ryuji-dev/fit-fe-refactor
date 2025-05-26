@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import landingImage from '@/public/assets/images/landing.png';
+import landingImage from '@/assets/images/landing.png';
 import { Button } from '@/shared/components/ui/button';
 
 const LANDING_TEXT = {

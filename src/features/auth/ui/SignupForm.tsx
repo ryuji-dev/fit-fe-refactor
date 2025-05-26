@@ -154,9 +154,7 @@ export default function SignupForm() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <header className="mb-8 text-center">
-          <h1 className="bg-gradient-to-r from-violet-600 to-rose-600 bg-clip-text text-2xl font-bold text-transparent">
-            회원가입
-          </h1>
+          <h1 className="text-2xl font-bold text-transparent text-zinc-900">회원가입</h1>
           <p className="mt-2 text-sm text-zinc-600">추가 정보를 입력해주세요</p>
         </header>
 
@@ -202,7 +200,7 @@ export default function SignupForm() {
                     </div>
                     {/* 인증 코드 */}
                     {showVerificationCode && !isEmailVerified && (
-                      <div className="animate-slide-down w-full lg:col-span-2">
+                      <div className="w-full animate-slide-down lg:col-span-2">
                         <div className="flex gap-2">
                           <div className="flex-1">
                             <Input

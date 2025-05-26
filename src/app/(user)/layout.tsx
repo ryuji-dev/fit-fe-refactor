@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Header from '@/widgets/Header';
 import Footer from '@/widgets/Footer';
-import BackgroundImage from '@/public/assets/images/background.png';
-import CoffeeImage from '@/public/assets/images/coffee.png';
+import BackgroundImage from '@/assets/images/background.png';
+import CoffeeImage from '@/assets/images/coffee.png';
 
 export default function UserLayout({ children }: { children: React.ReactNode }) {
   return (

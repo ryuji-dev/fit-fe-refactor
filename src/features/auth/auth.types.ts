@@ -1,7 +1,7 @@
 import type { Merge } from 'react-hook-form';
 import { UseFormRegister, FieldError, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
 import { SignupFormValues } from '@/entities/auth/signup.types';
-import type { ComponentType } from 'react';
+import type { StaticImageData } from 'next/image';
 
 export interface GenderSelectorProps {
   register: UseFormRegister<SignupFormValues>;
@@ -55,7 +55,7 @@ export interface SignupButtonProps extends React.ButtonHTMLAttributes<HTMLButton
 export type SocialProvider = 'naver' | 'kakao' | 'google';
 
 export interface SocialConfig {
-  icon: ComponentType;
+  icon: StaticImageData;
   bgColor: string;
   textColor: string;
   iconSize: string;

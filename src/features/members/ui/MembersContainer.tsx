@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
 import { MemberFilters } from '@/features/members/members.types';
 import Spinner from '@/shared/components/ui/spinner';
-import { ProfileCard } from '@/shared/components/ui/profile-card';
+import { BasicProfileCard } from '@/shared/components/ui/profile-card';
 import MemberFilterDialog from './MemberFilterDialog';
 
 interface MemberProfile {
@@ -357,7 +357,7 @@ export default function MembersContainer() {
       {isLoading ? (
         <div className="flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
           <Spinner size="lg" />
-          <p className="mt-4 text-sm text-gray-500">회원 목록을 불러오는 중...</p>
+          <p className="mt-4 text-sm text-zinc-500">회원 목록을 불러오는 중...</p>
         </div>
       ) : (
         <div
@@ -381,7 +381,7 @@ export default function MembersContainer() {
 
           <section className="grid grid-cols-2 gap-x-4 gap-y-6 lg:grid-cols-2 xl:grid-cols-3">
             {members.map((member) => (
-              <ProfileCard key={member.id} profile={member} />
+              <BasicProfileCard key={member.id} profile={member} />
             ))}
           </section>
 

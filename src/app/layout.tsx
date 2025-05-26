@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: '당신의 인연, 오늘도 어디선가 커피를 기다리고 있어요💓',
   openGraph: {
     title: 'Fit',
-    description: '하루 3번, 당신의 운명 같은 매칭이 찾아옵니다.',
+    description: '당신의 인연, 오늘도 어디선가 커피를 기다리고 있어요💓',
     url: 'https://fit-fe-refactor.vercel.app',
     siteName: 'Fit',
     images: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Fit',
-    description: '하루 3번, 당신의 운명 같은 매칭이 찾아옵니다.',
+    description: '당신의 인연, 오늘도 어디선가 커피를 기다리고 있어요💓',
     images: ['https://fit-fe-refactor.vercel.app/assets/og-image.png'],
   },
 };

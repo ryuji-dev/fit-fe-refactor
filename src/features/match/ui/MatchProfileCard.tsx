@@ -4,7 +4,7 @@ import { MatchProfileCardProps } from '../match.types';
 export const MatchProfileCard = ({ user, onSelect }: MatchProfileCardProps) => {
   return (
     <div className="flex w-48 flex-col items-center overflow-hidden rounded-xl border border-gray-100 bg-white/80 shadow backdrop-blur-sm">
-      <div className="relative h-56 w-full overflow-hidden bg-gray-200">
+      <div className="relative h-56 w-full cursor-pointer overflow-hidden bg-gray-200">
         <img
           src={user.imageUrl}
           alt={user.name}

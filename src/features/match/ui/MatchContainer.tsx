@@ -316,13 +316,13 @@ export default function MatchContainer() {
       {isLoading ? (
         <div className="flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
           <Spinner size="lg" />
-          <p className="mt-4 text-sm text-gray-500">오늘의 인연을 찾는 중...</p>
+          <p className="mt-4 text-sm text-zinc-500">오늘의 인연을 찾는 중...</p>
         </div>
       ) : (
         <div className="container mx-auto mb-16 px-4 py-8">
           <div className="mb-8 text-center">
-            <h1 className="mb-2 text-2xl font-bold text-gray-900">오늘의 매칭</h1>
-            <p className="text-sm text-gray-500">매일 오전 10시, 새로운 인연을 만나보세요!</p>
+            <h1 className="mb-2 text-2xl font-bold text-zinc-900">오늘의 매칭</h1>
+            <p className="text-sm text-zinc-500">매일 오전 10시, 새로운 인연을 만나보세요!</p>
           </div>
           <div className="flex flex-col gap-8">
             {matchPairs.map(([left, right], idx) => (

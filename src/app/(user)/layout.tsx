@@ -25,7 +25,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
         <div className="relative flex h-screen w-full flex-col rounded-lg bg-white shadow-2xl">
           <Header />
           <div className="scrollbar-hide w-full flex-1 overflow-auto">
-            <div className="flex min-h-full items-center justify-center">
+            <div className="flex items-center justify-center">
               <div className="h-full w-full max-w-3xl">{children}</div>
             </div>
           </div>

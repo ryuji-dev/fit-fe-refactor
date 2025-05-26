@@ -1,7 +1,5 @@
+import MembersContainer from '@/features/members/ui/MembersContainer';
+
 export default function MembersPage() {
-  return (
-    <div>
-      <h1>멤버</h1>
-    </div>
-  );
+  return <MembersContainer />;
 }

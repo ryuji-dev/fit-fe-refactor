@@ -331,10 +331,8 @@ export default function MembersContainer() {
   });
 
   useEffect(() => {
-    setTimeout(() => {
-      setMembers(memberMockData);
-      setIsLoading(false);
-    }, 1200);
+    setMembers(memberMockData);
+    setIsLoading(false);
   }, []);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {};
@@ -375,7 +373,7 @@ export default function MembersContainer() {
               </button>
             </div>
             <p className="mt-2 text-center text-sm text-zinc-500">
-              지금 접속 중인 이성과 새로운 인연을 만들어보세요.
+              현재 접속 중인 이성과 새로운 인연을 만들어보세요.
             </p>
           </header>
 

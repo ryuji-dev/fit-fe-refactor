@@ -278,10 +278,8 @@ export default function MatchContainer() {
   const [showLoginAlert, setShowLoginAlert] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      setMatchPairs(getMatchPairs(MOCK_IS_LOGGED_IN, MOCK_USER_GENDER));
-      setIsLoading(false);
-    }, 1200);
+    setMatchPairs(getMatchPairs(MOCK_IS_LOGGED_IN, MOCK_USER_GENDER));
+    setIsLoading(false);
   }, []);
 
   const handleSelectAll = (pairIndex: number) => {

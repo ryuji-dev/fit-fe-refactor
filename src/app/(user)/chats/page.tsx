@@ -1,7 +1,5 @@
+import ChatsContainer from '@/features/chats/ui/ChatsContainer';
+
 export default function ChatsPage() {
-  return (
-    <div>
-      <h1>채팅</h1>
-    </div>
-  );
+  return <ChatsContainer />;
 }

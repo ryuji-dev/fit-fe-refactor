@@ -40,12 +40,12 @@ export default function MyPageContainer() {
         </div>
       ) : (
         <div
-          className="scrollbar-hide container mx-auto mb-16 max-h-[calc(100vh-160px)] overflow-y-auto px-6 py-8"
+          className="scrollbar-hide container mx-auto mb-16 max-h-[calc(100vh-160px)] overflow-y-auto px-6 py-4"
           onScroll={handleScroll}
         >
-          <header className="mb-8">
-            <div className="relative flex items-center justify-center">
-              <h1 className="text-2xl font-bold text-zinc-900">마이페이지</h1>
+          <header className="mb-4">
+            <div className="relative flex items-center">
+              <h1 className="text-lg font-bold text-zinc-900">My Fit</h1>
             </div>
           </header>
           <section className="space-y-6">
@@ -65,28 +65,28 @@ export default function MyPageContainer() {
             </div>
             <ul className="divide-y divide-zinc-100 rounded-2xl bg-white p-2 shadow-md">
               <li>
-                <button className="flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">
+                <button className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">
                   <UserRoundPen className="h-5 w-5 text-violet-500" />
                   <span className="flex-1 text-left font-medium text-zinc-900">내 계정 관리</span>
                   <ChevronRight className="h-5 w-5 text-zinc-400" />
                 </button>
               </li>
               <li>
-                <button className="flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">
+                <button className="my-1 flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">
                   <Lock className="h-5 w-5 text-violet-500" />
                   <span className="flex-1 text-left font-medium text-zinc-900">비밀번호 변경</span>
                   <ChevronRight className="h-5 w-5 text-zinc-400" />
                 </button>
               </li>
               <li>
-                <button className="flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">
+                <button className="my-1 flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">
                   <SlidersHorizontal className="h-5 w-5 text-violet-500" />
                   <span className="flex-1 text-left font-medium text-zinc-900">매칭 필터 설정</span>
                   <ChevronRight className="h-5 w-5 text-zinc-400" />
                 </button>
               </li>
               <li>
-                <button className="flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">
+                <button className="my-1 flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">
                   <Coffee className="h-5 w-5 text-violet-500" />
                   <span className="flex-1 text-left font-medium text-zinc-900">
                     커피 아이템 구매
@@ -95,7 +95,7 @@ export default function MyPageContainer() {
                 </button>
               </li>
               <li>
-                <button className="flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">
+                <button className="my-1 flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">
                   <BookOpenText className="h-5 w-5 text-violet-500" />
                   <span className="flex-1 text-left font-medium text-zinc-900">앱 사용 가이드</span>
                   <ChevronRight className="h-5 w-5 text-zinc-400" />
@@ -104,7 +104,7 @@ export default function MyPageContainer() {
               <li>
                 <button
                   onClick={() => logout.mutate()}
-                  className="flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-rose-50 focus:bg-rose-100"
+                  className="mt-1 flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-rose-50 focus:bg-rose-100"
                 >
                   <LogOut className="h-5 w-5 text-rose-500" />
                   <span className="flex-1 text-left font-medium text-rose-500">로그아웃</span>

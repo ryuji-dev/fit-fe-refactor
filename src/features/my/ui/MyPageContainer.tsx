@@ -1,8 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Spinner from '@/shared/components/ui/spinner';
-import { Button } from '@/shared/components/ui/button';
 import {
   UserRoundPen,
   Lock,
@@ -12,6 +10,9 @@ import {
   LogOut,
   ChevronRight,
 } from 'lucide-react';
+import Spinner from '@/shared/components/ui/spinner';
+import { Button } from '@/shared/components/ui/button';
+import { useLogout } from '@/features/auth/auth.mutations';
 
 const dummyUser = {
   profileImage:
@@ -22,6 +23,7 @@ const dummyUser = {
 
 export default function MyPageContainer() {
   const [isLoading, setIsLoading] = useState(true);
+  const logout = useLogout();
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {};
 
@@ -100,7 +102,10 @@ export default function MyPageContainer() {
                 </button>
               </li>
               <li>
-                <button className="flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-rose-50 focus:bg-rose-100">
+                <button
+                  onClick={() => logout.mutate()}
+                  className="flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-rose-50 focus:bg-rose-100"
+                >
                   <LogOut className="h-5 w-5 text-rose-500" />
                   <span className="flex-1 text-left font-medium text-rose-500">로그아웃</span>
                   <ChevronRight className="h-5 w-5 text-zinc-400" />

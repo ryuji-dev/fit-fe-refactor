@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { Toaster } from 'sonner';
 import '@/styles/globals.css';
+import Providers from './providers';
 
 export const metadata: Metadata = {
   title: 'Fit',
@@ -35,7 +37,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="select-none [&_img]:drag-none">{children}</body>
+      <body className="select-none [&_img]:drag-none">
+        <Providers>
+          {children}
+          <Toaster position="top-center" richColors />
+        </Providers>
+      </body>
     </html>
   );
 }

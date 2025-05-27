@@ -4,10 +4,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginFormData } from '@/entities/auth/login.types';
 import { loginSchema } from '@/entities/auth/login.schema';
+import { useLogin } from '@/features/auth/auth.mutations';
 import { Button } from '@/shared/components/ui/button';
 import Input from '@/shared/components/ui/input';
-import SocialLoginButton from './SocialLoginButton';
 import Spinner from '@/shared/components/ui/spinner';
+import SocialLoginButton from './SocialLoginButton';
 
 export default function LoginForm() {
   const {
@@ -18,16 +19,10 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      // TODO: 로그인 로직 구현
-      console.log(data);
+  const login = useLogin();
 
-      // 스피너 테스트를 위한 인위적 지연
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-    } catch (error) {
-      console.error('로그인 실패:', error);
-    }
+  const onSubmit = (data: LoginFormData) => {
+    login.mutate(data);
   };
 
   const handleSocialLogin = (provider: 'naver' | 'kakao' | 'google') => {

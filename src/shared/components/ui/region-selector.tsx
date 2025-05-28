@@ -1,6 +1,6 @@
 'use client';
 
-import { UseFormRegister, Path } from 'react-hook-form';
+import { UseFormRegister, Path, useFormContext } from 'react-hook-form';
 import { REGION } from '@/shared/constants/regions';
 import { BaseSelector } from './base-selector';
 
@@ -19,6 +19,9 @@ export default function RegionSelector<T extends { region: string }>({
   selectedRegion = '',
   className = 'w-full',
 }: RegionSelectorProps<T>) {
+  const { watch } = useFormContext();
+  const currentRegion = watch('region');
+
   return (
     <BaseSelector
       label="지역"
@@ -38,7 +41,7 @@ export default function RegionSelector<T extends { region: string }>({
           error
             ? 'border-rose-500/50 focus:border-rose-500'
             : 'border-zinc-200/50 focus:border-violet-500 group-hover:border-violet-500/50'
-        } ${selectedRegion === '' ? 'text-gray-400' : 'text-zinc-900'} `}
+        } ${currentRegion === '' ? 'text-gray-400' : 'text-zinc-900'} `}
       >
         {REGION.map(({ value, label }) => (
           <option key={value} value={value} disabled={!value}>

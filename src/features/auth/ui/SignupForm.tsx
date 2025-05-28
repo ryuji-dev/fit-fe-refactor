@@ -1,19 +1,24 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import Link from 'next/link';
 import { useForm, FormProvider } from 'react-hook-form';
+import { ArrowLeft } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupFormValues } from '@/entities/auth/signup.types';
 import { signupSchema } from '@/entities/auth/signup.schema';
+import {
+  useCheckEmailDuplication,
+  useSendEmailVerificationCode,
+  useVerifyEmailCode,
+} from '@/features/auth/auth.mutations';
 import Input from '@/shared/components/ui/input';
-import { SignupButton, SignupSubmitButton } from './SignupButton';
 import GenderSelector from './GenderSelector';
 import RegionSelector from './RegionSelector';
 import MbtiSelector from './MbtiSelector';
 import MultiToggleButtonGroup from './MultiToggleButtonGroup';
 import ProfileImageSection from './ProfileImageSection';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import { SignupButton, SignupSubmitButton } from './SignupButton';
 
 export default function SignupForm() {
   const methods = useForm<SignupFormValues>({
@@ -62,24 +67,39 @@ export default function SignupForm() {
   const [showVerificationCode, setShowVerificationCode] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { mutate: checkEmailDuplication } = useCheckEmailDuplication();
+  const { mutate: sendEmailVerificationCode } = useSendEmailVerificationCode();
+  const { mutate: verifyEmailCode } = useVerifyEmailCode();
+
+  // 이메일 중복 확인, 이메일 인증 코드 전송
   const handleSendVerificationCode = async () => {
+    setError(null); // 이전 에러 초기화
     if (!email) {
       setError('이메일을 먼저 입력해주세요.');
       return;
     }
 
     setIsSendingCode(true);
-    try {
-      // TODO: 이메일 인증 코드 전송 API 호출
-      setError(null);
-      setShowVerificationCode(true);
-    } catch (err) {
-      setError('인증 코드 전송에 실패했습니다.');
-    } finally {
-      setIsSendingCode(false);
-    }
+    checkEmailDuplication(email, {
+      onSuccess: () => {
+        sendEmailVerificationCode(email, {
+          onSuccess: () => {
+            setShowVerificationCode(true);
+          },
+          onSettled: () => {
+            setIsSendingCode(false);
+          },
+        });
+      },
+      onError: () => {
+        setIsSendingCode(false);
+        setShowVerificationCode(false);
+        setIsEmailVerified(false);
+      },
+    });
   };
 
+  // 이메일 인증 코드 확인
   const handleVerifyCode = async () => {
     if (!verificationCode) {
       setError('인증 코드를 입력해주세요.');
@@ -87,15 +107,13 @@ export default function SignupForm() {
     }
 
     setIsVerifyingCode(true);
-    try {
-      // TODO: 인증 코드 확인 API 호출
-      setIsEmailVerified(true);
-      setError(null);
-    } catch (err) {
-      setError('인증 코드가 일치하지 않습니다.');
-    } finally {
-      setIsVerifyingCode(false);
-    }
+    verifyEmailCode(Number(verificationCode), {
+      onSuccess: () => {
+        setIsEmailVerified(true);
+        setError(null);
+      },
+    });
+    setIsVerifyingCode(false);
   };
 
   const onSubmit = (data: SignupFormValues) => {
@@ -103,7 +121,6 @@ export default function SignupForm() {
     // TODO: 회원가입 로직 구현
   };
 
-  // 모든 필드가 유효한지 확인하는 함수
   const isFormValid = useCallback(() => {
     const requiredFields = [
       'email',
@@ -122,7 +139,6 @@ export default function SignupForm() {
       return !fieldError && isDirty;
     });
 
-    // 배열 필드 유효성 검사
     const isInterestsValid = !errors.interests && watch('interests')?.length === 3;
     const isListeningValid = !errors.listening && watch('listening')?.length === 3;
     const isSelfintroValid = !errors.selfintro && watch('selfintro')?.length === 3;
@@ -182,6 +198,17 @@ export default function SignupForm() {
                             error={errors.email}
                             isDirty={dirtyFields.email}
                             disabled={isEmailVerified}
+                            onKeyDown={(e) => {
+                              if (
+                                e.key === 'Enter' &&
+                                !isSendingCode &&
+                                !isEmailVerified &&
+                                isEmailValid
+                              ) {
+                                e.preventDefault();
+                                handleSendVerificationCode();
+                              }
+                            }}
                           />
                         </div>
                         <SignupButton
@@ -192,7 +219,6 @@ export default function SignupForm() {
                           size="sm"
                           isLoading={isSendingCode}
                           isCompleted={isEmailVerified}
-                          loadingText="전송 중..."
                           completedText="인증 완료"
                           defaultText="이메일 인증"
                         />
@@ -213,6 +239,16 @@ export default function SignupForm() {
                               register={register('verificationCode')}
                               error={errors.verificationCode}
                               isDirty={dirtyFields.verificationCode}
+                              onKeyDown={(e) => {
+                                if (
+                                  e.key === 'Enter' &&
+                                  !isVerifyingCode &&
+                                  isVerificationCodeValid
+                                ) {
+                                  e.preventDefault();
+                                  handleVerifyCode();
+                                }
+                              }}
                             />
                           </div>
                           <SignupButton
@@ -224,7 +260,6 @@ export default function SignupForm() {
                             className="mt-7"
                             size="sm"
                             isLoading={isVerifyingCode}
-                            loadingText="확인 중..."
                             defaultText="인증 코드 확인"
                           />
                         </div>

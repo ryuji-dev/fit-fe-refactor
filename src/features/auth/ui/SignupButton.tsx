@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import Spinner from '@/shared/components/ui/spinner';
 import { SignupButtonProps, SignupSubmitButtonProps } from '@/features/auth/auth.types';
 
 export function SignupButton({
@@ -6,7 +7,6 @@ export function SignupButton({
   size = 'md',
   isLoading,
   isCompleted,
-  loadingText,
   completedText,
   defaultText,
   className,
@@ -29,7 +29,15 @@ export function SignupButton({
       className={clsx(baseStyles, className)}
       {...rest}
     >
-      {isLoading ? loadingText : isCompleted ? completedText : defaultText}
+      {isLoading ? (
+        <div className="flex w-16 items-center justify-center gap-2">
+          <Spinner size="sm" color="white" />
+        </div>
+      ) : isCompleted ? (
+        completedText
+      ) : (
+        defaultText || children
+      )}
     </button>
   );
 }
@@ -55,11 +63,13 @@ export function SignupSubmitButton({
       )}
       {...rest}
     >
-      <span className={clsx(isPending && 'invisible')}>가입완료</span>
-      {isPending && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+      {isPending ? (
+        <div className="flex items-center justify-center gap-2">
+          <Spinner size="sm" color="white" />
+          <span>처리 중...</span>
         </div>
+      ) : (
+        '회원가입'
       )}
     </button>
   );

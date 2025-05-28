@@ -52,7 +52,7 @@ export async function fetcher<T>(endpoint: string, options?: RequestInit): Promi
       ...options,
       credentials: 'include',
       headers: {
-        'Content-Type': 'application/json',
+        ...(options?.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
         ...options?.headers,
       },
     });

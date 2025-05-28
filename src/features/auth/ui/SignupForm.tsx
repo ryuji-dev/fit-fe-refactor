@@ -1,17 +1,22 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useForm, FormProvider } from 'react-hook-form';
 import { ArrowLeft } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupFormValues } from '@/entities/auth/signup.types';
 import { signupSchema } from '@/entities/auth/signup.schema';
+import { SignupRequest } from '@/features/auth/api/api.types';
+import { useSignup } from '@/features/auth/auth.mutations';
 import {
-  useCheckEmailDuplication,
-  useSendEmailVerificationCode,
-  useVerifyEmailCode,
-} from '@/features/auth/auth.mutations';
+  useGetInterestCategories,
+  useGetFeedbackCategories,
+  useGetSelfIntroCategories,
+} from '@/features/auth/auth.queries';
+import { useEmailVerification } from '@/features/auth/hooks/useEmailVerification';
+import { useSignupFormValidation } from '@/features/auth/hooks/useSignupFormValidation';
+import { uploadImages } from '@/shared/lib/utils/uploadImages';
 import Input from '@/shared/components/ui/input';
 import GenderSelector from './GenderSelector';
 import RegionSelector from './RegionSelector';
@@ -61,104 +66,59 @@ export default function SignupForm() {
   const isVerificationCodeValid = !errors.verificationCode && dirtyFields.verificationCode;
 
   const [images, setImages] = useState<(File | null)[]>(Array(6).fill(null));
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [isSendingCode, setIsSendingCode] = useState(false);
-  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
-  const [showVerificationCode, setShowVerificationCode] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const { mutate: checkEmailDuplication } = useCheckEmailDuplication();
-  const { mutate: sendEmailVerificationCode } = useSendEmailVerificationCode();
-  const { mutate: verifyEmailCode } = useVerifyEmailCode();
+  const { mutate: signup } = useSignup();
+  const { data: interestCategories, isLoading: isInterestLoading } = useGetInterestCategories();
+  const { data: feedbackCategories, isLoading: isFeedbackLoading } = useGetFeedbackCategories();
+  const { data: selfIntroCategories, isLoading: isSelfIntroLoading } = useGetSelfIntroCategories();
 
-  // 이메일 중복 확인, 이메일 인증 코드 전송
-  const handleSendVerificationCode = async () => {
-    setError(null); // 이전 에러 초기화
-    if (!email) {
-      setError('이메일을 먼저 입력해주세요.');
-      return;
+  const {
+    isEmailVerified,
+    isSendingCode,
+    isVerifyingCode,
+    showVerificationCode,
+    error,
+    handleSendVerificationCode,
+    handleVerifyCode,
+  } = useEmailVerification();
+
+  const { isFormValid } = useSignupFormValidation({
+    errors,
+    dirtyFields,
+    watch,
+    images,
+    isEmailVerified,
+  });
+
+  const onSubmit = async (data: SignupFormValues) => {
+    try {
+      const imageUrls = await uploadImages(images);
+
+      const signupData: SignupRequest = {
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        name: data.name,
+        height: Number(data.height),
+        nickname: data.nickname,
+        birthday: data.birthday,
+        gender: data.gender,
+        phone: data.phone,
+        region: data.region,
+        job: data.job,
+        mbti: data.mbti,
+        selfintro: data.selfintro,
+        listening: data.listening,
+        interests: data.interests,
+        images: imageUrls,
+        authProvider: 'email',
+      };
+
+      signup(signupData);
+    } catch (error) {
+      console.error('회원가입 중 오류 발생:', error);
     }
-
-    setIsSendingCode(true);
-    checkEmailDuplication(email, {
-      onSuccess: () => {
-        sendEmailVerificationCode(email, {
-          onSuccess: () => {
-            setShowVerificationCode(true);
-          },
-          onSettled: () => {
-            setIsSendingCode(false);
-          },
-        });
-      },
-      onError: () => {
-        setIsSendingCode(false);
-        setShowVerificationCode(false);
-        setIsEmailVerified(false);
-      },
-    });
   };
-
-  // 이메일 인증 코드 확인
-  const handleVerifyCode = async () => {
-    if (!verificationCode) {
-      setError('인증 코드를 입력해주세요.');
-      return;
-    }
-
-    setIsVerifyingCode(true);
-    verifyEmailCode(Number(verificationCode), {
-      onSuccess: () => {
-        setIsEmailVerified(true);
-        setError(null);
-      },
-    });
-    setIsVerifyingCode(false);
-  };
-
-  const onSubmit = (data: SignupFormValues) => {
-    console.log(data);
-    // TODO: 회원가입 로직 구현
-  };
-
-  const isFormValid = useCallback(() => {
-    const requiredFields = [
-      'email',
-      'password',
-      'confirmPassword',
-      'name',
-      'nickname',
-      'gender',
-      'region',
-      'mbti',
-    ];
-
-    const isAllFieldsValid = requiredFields.every((field) => {
-      const fieldError = errors[field as keyof typeof errors];
-      const isDirty = dirtyFields[field as keyof typeof dirtyFields];
-      return !fieldError && isDirty;
-    });
-
-    const isInterestsValid = !errors.interests && watch('interests')?.length === 3;
-    const isListeningValid = !errors.listening && watch('listening')?.length === 3;
-    const isSelfintroValid = !errors.selfintro && watch('selfintro')?.length === 3;
-
-    const uploadedImageCount = images.filter(Boolean).length;
-    const isImageValid = uploadedImageCount >= 2;
-
-    return (
-      isAllFieldsValid &&
-      isInterestsValid &&
-      isListeningValid &&
-      isSelfintroValid &&
-      isImageValid &&
-      isEmailVerified
-    );
-  }, [errors, dirtyFields, images, isEmailVerified, watch]);
-
-  useEffect(() => {
-    methods.trigger();
-  }, []);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-rose-50 px-4 pb-24">
@@ -174,7 +134,6 @@ export default function SignupForm() {
           <p className="mt-2 text-sm text-zinc-600">추가 정보를 입력해주세요</p>
         </header>
 
-        {/* 회원가입 폼 */}
         <section className="relative">
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-violet-500/10 to-rose-500/10 blur-xl" />
           <FormProvider {...methods}>
@@ -206,14 +165,14 @@ export default function SignupForm() {
                                 isEmailValid
                               ) {
                                 e.preventDefault();
-                                handleSendVerificationCode();
+                                handleSendVerificationCode(email);
                               }
                             }}
                           />
                         </div>
                         <SignupButton
                           type="button"
-                          onClick={handleSendVerificationCode}
+                          onClick={() => handleSendVerificationCode(email)}
                           disabled={isSendingCode || isEmailVerified || !isEmailValid}
                           className="mt-7"
                           size="sm"
@@ -243,17 +202,18 @@ export default function SignupForm() {
                                 if (
                                   e.key === 'Enter' &&
                                   !isVerifyingCode &&
-                                  isVerificationCodeValid
+                                  isVerificationCodeValid &&
+                                  verificationCode
                                 ) {
                                   e.preventDefault();
-                                  handleVerifyCode();
+                                  handleVerifyCode(verificationCode);
                                 }
                               }}
                             />
                           </div>
                           <SignupButton
                             type="button"
-                            onClick={handleVerifyCode}
+                            onClick={() => verificationCode && handleVerifyCode(verificationCode)}
                             disabled={
                               isVerifyingCode || isEmailVerified || !isVerificationCodeValid
                             }
@@ -359,39 +319,53 @@ export default function SignupForm() {
                 </div>
                 <div className="space-y-4">
                   <h2 className="text-lg font-semibold text-zinc-900">자기소개</h2>
-                  {/* 자기소개 */}
                   <div className="space-y-6">
                     <MultiToggleButtonGroup
                       label="관심사"
                       name="interests"
-                      options={['운동', '여행', '음악', '영화', '독서', '게임']}
+                      options={
+                        interestCategories?.map((item) =>
+                          typeof item === 'string' ? item : item.name,
+                        ) ?? []
+                      }
                       requiredCount={3}
                       register={register}
                       setValue={setValue}
                       trigger={trigger}
                       error={errors.interests}
+                      isLoading={isInterestLoading}
                     />
                     <MultiToggleButtonGroup
                       label="이런 얘기 많이 들어요"
                       name="listening"
-                      options={['공감', '조언', '위로', '격려', '칭찬']}
+                      options={
+                        feedbackCategories?.map((item) =>
+                          typeof item === 'string' ? item : item.name,
+                        ) ?? []
+                      }
                       requiredCount={3}
                       register={register}
                       setValue={setValue}
                       trigger={trigger}
                       error={errors.listening}
                       gridCols="grid-cols-2"
+                      isLoading={isFeedbackLoading}
                     />
                     <MultiToggleButtonGroup
                       label="저는 이런 사람이에요"
                       name="selfintro"
-                      options={['활발한', '차분한', '감성적인', '논리적인', '창의적인']}
+                      options={
+                        selfIntroCategories?.map((item) =>
+                          typeof item === 'string' ? item : item.name,
+                        ) ?? []
+                      }
                       requiredCount={3}
                       register={register}
                       setValue={setValue}
                       trigger={trigger}
                       error={errors.selfintro}
                       gridCols="grid-cols-2"
+                      isLoading={isSelfIntroLoading}
                     />
                   </div>
                 </div>

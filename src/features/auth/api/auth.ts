@@ -1,38 +1,38 @@
 import { fetcher } from '@/shared/lib/fetcher';
+import {
+  LoginRequest,
+  LoginResponse,
+  SignupRequest,
+  SignupResponse,
+  CheckEmailResponse,
+  CategoryItem,
+} from '@/features/auth/api/api.types';
 
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  user: {
-    id: string;
-    email: string;
-    nickname: string;
-  };
-}
-
-interface CheckEmailResponse {
-  isAvailable: boolean;
-  message?: string;
-}
-
-export async function loginApi(data: LoginRequest): Promise<LoginResponse> {
+// 로그인
+export const loginApi = async (data: LoginRequest): Promise<LoginResponse> => {
   return fetcher<LoginResponse>('/auth/login', {
     method: 'POST',
     body: JSON.stringify(data),
   });
-}
+};
 
-export async function logoutApi(): Promise<void> {
+// 로그아웃
+export const logoutApi = async (): Promise<void> => {
   return fetcher<void>('/auth/logout', {
     method: 'POST',
   });
-}
+};
+
+// 회원가입
+export const signupApi = async (data: SignupRequest): Promise<SignupResponse> => {
+  return fetcher<SignupResponse>('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+};
 
 // 이메일 중복 확인
-export async function checkEmailDuplicationApi(email: string): Promise<CheckEmailResponse> {
+export const checkEmailDuplicationApi = async (email: string): Promise<CheckEmailResponse> => {
   const response = await fetcher<CheckEmailResponse>('/auth/check-email', {
     method: 'POST',
     body: JSON.stringify({ email }),
@@ -44,20 +44,49 @@ export async function checkEmailDuplicationApi(email: string): Promise<CheckEmai
   }
 
   return response;
-}
+};
 
 // 이메일 인증 코드 전송
-export async function sendEmailVerificationCodeApi(email: string): Promise<void> {
+export const sendEmailVerificationCodeApi = async (email: string): Promise<void> => {
   return fetcher<void>('/auth/send-verification-email', {
     method: 'POST',
     body: JSON.stringify({ email }),
   });
-}
+};
 
 // 이메일 인증 코드 확인
-export async function verifyEmailCodeApi(code: number): Promise<void> {
+export const verifyEmailCodeApi = async (code: number): Promise<void> => {
   return fetcher<void>('/auth/verify-email', {
     method: 'POST',
     body: JSON.stringify({ code }),
   });
-}
+};
+
+// 관심사 카테고리 조회
+export const getInterestCategoriesApi = async (): Promise<CategoryItem[]> => {
+  return fetcher<CategoryItem[]>('/interest-category', {
+    method: 'GET',
+  });
+};
+
+// 이런 얘기 많이 들어요 카테고리 조회
+export const getFeedbackCategoriesApi = async (): Promise<CategoryItem[]> => {
+  return fetcher<CategoryItem[]>('/feedback', {
+    method: 'GET',
+  });
+};
+
+// 저는 이런 사람이에요 카테고리 조회
+export const getSelfIntroCategoriesApi = async (): Promise<CategoryItem[]> => {
+  return fetcher<CategoryItem[]>('/introduction', {
+    method: 'GET',
+  });
+};
+
+// 이미지 업로드
+export const uploadImageApi = async (formData: FormData): Promise<string> => {
+  return fetcher<string>('/profile-image/temp', {
+    method: 'POST',
+    body: formData,
+  });
+};

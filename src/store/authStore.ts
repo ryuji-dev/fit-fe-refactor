@@ -1,10 +1,20 @@
 import { create } from 'zustand';
 import Cookies from 'js-cookie';
 
+interface ProfileImage {
+  id: string;
+  imageUrl: string;
+  isMain: boolean;
+}
+
 interface User {
   id: string;
   email: string;
   nickname: string;
+  profileImage?: string;
+  profile?: {
+    profileImage: ProfileImage[];
+  };
 }
 
 interface AuthState {

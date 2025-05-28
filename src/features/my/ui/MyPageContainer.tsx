@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import {
   UserRoundPen,
   Lock,
@@ -13,23 +14,29 @@ import {
 import Spinner from '@/shared/components/ui/spinner';
 import { Button } from '@/shared/components/ui/button';
 import { useLogout } from '@/features/auth/auth.mutations';
-
-const dummyUser = {
-  profileImage:
-    'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80',
-  nickname: '김지은',
-  email: 'jieun.kim@email.com',
-};
+import { useAuthStore } from '@/store/authStore';
+import { useRouter } from 'next/navigation';
+import defaultProfileImage from '@/assets/images/default.png';
 
 export default function MyPageContainer() {
   const [isLoading, setIsLoading] = useState(true);
   const logout = useLogout();
+  const router = useRouter();
+  const user = useAuthStore((state) => state.user);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {};
 
   useEffect(() => {
+    if (!user) {
+      router.push('/auth');
+      return;
+    }
     setIsLoading(false);
-  }, []);
+  }, [user, router]);
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <main className="flex min-h-[calc(100vh-160px)] w-full flex-col bg-gradient-to-br from-violet-50 via-white to-rose-50">
@@ -50,14 +57,19 @@ export default function MyPageContainer() {
           </header>
           <section className="space-y-6">
             <div className="flex items-center gap-4 rounded-2xl bg-white p-6 shadow-md">
-              <img
-                src={dummyUser.profileImage}
+              <Image
+                src={
+                  user.profile?.profileImage?.find((img) => img.isMain)?.imageUrl ||
+                  defaultProfileImage
+                }
                 className="h-16 w-16 rounded-full border-2 border-violet-200 object-cover shadow-sm"
                 alt="프로필"
+                width={64}
+                height={64}
               />
               <div className="flex flex-col justify-center">
-                <div className="text-lg font-bold text-zinc-900">{dummyUser.nickname}</div>
-                <div className="text-xs text-zinc-500">{dummyUser.email}</div>
+                <div className="text-lg font-bold text-zinc-900">{user.nickname}</div>
+                <div className="text-xs text-zinc-500">{user.email}</div>
               </div>
               <Button variant="secondary" size="sm" className="ml-auto">
                 프로필 수정

@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie';
+import { useAuthStore } from '@/store/authStore';
 
 const PUBLIC_ENDPOINTS = [
   '/auth/login',
@@ -73,7 +73,7 @@ export async function fetcher<T>(endpoint: string, options?: RequestInit): Promi
       if (
         response.status === 401 &&
         !PUBLIC_ENDPOINTS.some((path) => endpoint.startsWith(path)) &&
-        Cookies.get('isAuthenticated') === 'true'
+        useAuthStore.getState().isAuthenticated
       ) {
         window.location.href = '/auth';
       }

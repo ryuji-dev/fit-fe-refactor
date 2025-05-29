@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -12,11 +11,7 @@ import coffeeBeansIcon from '@/assets/icons/coffee-beans.png';
 
 export default function Header() {
   const router = useRouter();
-  const { isAuthenticated, initializeAuth } = useAuthStore();
-
-  useEffect(() => {
-    initializeAuth();
-  }, [initializeAuth]);
+  const { isAuthenticated } = useAuthStore();
 
   const handleLogin = () => {
     router.push('/auth');

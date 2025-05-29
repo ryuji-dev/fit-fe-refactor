@@ -6,7 +6,7 @@ interface SpinnerProps {
 export default function Spinner({ size = 'md', color = 'primary' }: SpinnerProps) {
   const sizeClasses = {
     sm: 'w-4 h-4',
-    md: 'w-8 h-8',
+    md: 'w-10 h-10',
     lg: 'w-12 h-12',
   };
 

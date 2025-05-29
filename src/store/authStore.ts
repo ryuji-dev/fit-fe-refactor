@@ -1,47 +1,60 @@
 import { create } from 'zustand';
-import Cookies from 'js-cookie';
+import { persist } from 'zustand/middleware';
 
-interface ProfileImage {
-  id: string;
-  imageUrl: string;
-  isMain: boolean;
-}
-
+// 보안을 위해 최소한의 유저 정보만 저장
 interface User {
   id: string;
-  email: string;
   nickname: string;
   profileImage?: string;
-  profile?: {
-    profileImage: ProfileImage[];
-  };
 }
 
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  setUser: (user: User | null) => void;
+  setUser: (
+    user: {
+      id: string;
+      nickname: string;
+      profileImage?: string;
+      profile?: { profileImage: { isMain: boolean; imageUrl: string }[] };
+    } | null,
+  ) => void;
   logout: () => void;
-  initializeAuth: () => void;
 }
 
-export const useAuthStore = create<AuthState>()((set) => ({
-  user: null,
-  isAuthenticated: false,
-  setUser: (user) => {
-    set({ user, isAuthenticated: !!user });
-    if (user) {
-      Cookies.set('isAuthenticated', 'true', { expires: 0.5 });
-    } else {
-      Cookies.set('isAuthenticated', 'false', { expires: 0.5 });
-    }
-  },
-  logout: () => {
-    Cookies.set('isAuthenticated', 'false', { expires: 0.5 });
-    set({ user: null, isAuthenticated: false });
-  },
-  initializeAuth: () => {
-    const isAuthenticated = Cookies.get('isAuthenticated') === 'true';
-    set({ user: null, isAuthenticated });
-  },
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
+      setUser: (user) => {
+        let minimalUser: User | null = null;
+        if (user) {
+          let profileImage = user.profileImage;
+          if (user.profile && Array.isArray(user.profile.profileImage)) {
+            const mainImg = user.profile.profileImage.find((img: any) => img.isMain);
+            if (mainImg) {
+              profileImage = mainImg.imageUrl;
+            }
+          }
+          minimalUser = {
+            id: user.id,
+            nickname: user.nickname,
+            profileImage,
+          };
+        }
+        set({ user: minimalUser, isAuthenticated: !!minimalUser });
+      },
+      logout: () => {
+        set({ user: null, isAuthenticated: false });
+      },
+    }),
+    {
+      name: 'auth-storage',
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
+  ),
+);

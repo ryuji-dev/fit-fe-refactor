@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import {
   UserRoundPen,
   Lock,
@@ -11,18 +12,20 @@ import {
   LogOut,
   ChevronRight,
 } from 'lucide-react';
-import Spinner from '@/shared/components/ui/spinner';
-import { Button } from '@/shared/components/ui/button';
 import { useLogout } from '@/features/auth/api/auth.mutations';
+import { useGetMyMiniProfile } from '@/features/my/api/my.queries';
+import { Button } from '@/shared/components/ui/button';
+import Spinner from '@/shared/components/ui/spinner';
 import { useAuthStore } from '@/store/authStore';
-import { useRouter } from 'next/navigation';
 import defaultProfileImage from '@/assets/images/default.png';
+import { Skeleton } from '@/shared/components/ui/skeleton';
 
 export default function MyPageContainer() {
   const [isLoading, setIsLoading] = useState(true);
   const logout = useLogout();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
+  const { data: myProfile, isLoading: isLoadingMyProfile } = useGetMyMiniProfile();
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {};
 
@@ -35,6 +38,8 @@ export default function MyPageContainer() {
   }, [user, router]);
 
   if (!user) return null;
+
+  const { nickname, email, profileImage } = myProfile || {};
 
   return (
     <main className="flex min-h-[calc(100vh-160px)] w-full flex-col bg-gradient-to-br from-violet-50 via-white to-rose-50">
@@ -54,25 +59,33 @@ export default function MyPageContainer() {
             </div>
           </header>
           <section className="space-y-6">
-            <div className="flex items-center gap-4 rounded-2xl bg-white p-6 shadow-md">
-              <Image
-                src={
-                  user.profile?.profileImage?.find((img) => img.isMain)?.imageUrl ||
-                  defaultProfileImage
-                }
-                className="h-16 w-16 rounded-full border-2 border-violet-200 object-cover shadow-sm"
-                alt="프로필"
-                width={64}
-                height={64}
-              />
-              <div className="flex flex-col justify-center">
-                <div className="text-lg font-bold text-zinc-900">{user.nickname}</div>
-                <div className="text-xs text-zinc-500">{user.email}</div>
+            {isLoadingMyProfile ? (
+              <div className="flex items-center gap-4 rounded-2xl bg-white p-6 shadow-md">
+                <Skeleton className="h-16 w-16 rounded-full" />
+                <div className="flex flex-col justify-center">
+                  <Skeleton className="mb-2 h-6 w-24" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+                <Skeleton className="ml-auto h-8 w-20" />
               </div>
-              <Button variant="secondary" size="sm" className="ml-auto">
-                프로필 수정
-              </Button>
-            </div>
+            ) : (
+              <div className="flex items-center gap-4 rounded-2xl bg-white p-6 shadow-md">
+                <Image
+                  src={profileImage || defaultProfileImage}
+                  className="h-16 w-16 rounded-full border-2 border-violet-200 object-cover shadow-sm"
+                  alt="프로필"
+                  width={64}
+                  height={64}
+                />
+                <div className="flex flex-col justify-center">
+                  <div className="text-lg font-bold text-zinc-900">{nickname}</div>
+                  <div className="text-xs text-zinc-500">{email}</div>
+                </div>
+                <Button variant="secondary" size="sm" className="ml-auto">
+                  프로필 수정
+                </Button>
+              </div>
+            )}
             <ul className="divide-y divide-zinc-100 rounded-2xl bg-white p-2 shadow-md">
               <li>
                 <button className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-4 transition hover:bg-violet-50 focus:bg-violet-100">

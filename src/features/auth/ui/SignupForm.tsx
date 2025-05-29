@@ -8,12 +8,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupFormValues } from '@/entities/auth/signup.types';
 import { signupSchema } from '@/entities/auth/signup.schema';
 import { SignupRequest } from '@/features/auth/api/api.types';
-import { useSignup } from '@/features/auth/auth.mutations';
+import { useSignup } from '@/features/auth/api/auth.mutations';
 import {
   useGetInterestCategories,
   useGetFeedbackCategories,
   useGetSelfIntroCategories,
-} from '@/features/auth/auth.queries';
+} from '@/features/auth/api/auth.queries';
 import { useEmailVerification } from '@/features/auth/hooks/useEmailVerification';
 import { useSignupFormValidation } from '@/features/auth/hooks/useSignupFormValidation';
 import { uploadImages } from '@/shared/lib/utils/uploadImages';

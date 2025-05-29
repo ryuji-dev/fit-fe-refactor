@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginFormData } from '@/entities/auth/login.types';
 import { loginSchema } from '@/entities/auth/login.schema';
-import { useLogin } from '@/features/auth/auth.mutations';
+import { useLogin } from '@/features/auth/api/auth.mutations';
 import { Button } from '@/shared/components/ui/button';
 import Input from '@/shared/components/ui/input';
 import Spinner from '@/shared/components/ui/spinner';

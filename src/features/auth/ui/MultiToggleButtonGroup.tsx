@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MultiToggleButtonGroupProps } from '../auth.types';
+import { MultiToggleButtonGroupProps } from '../types/ui.types';
 import { cn } from '@/shared/lib/utils/cn';
 import Spinner from '@/shared/components/ui/spinner';
 import { FieldError } from 'react-hook-form';

@@ -10,7 +10,7 @@ import {
   sendEmailVerificationCodeApi,
   verifyEmailCodeApi,
   uploadImageApi,
-} from './api/auth';
+} from './auth';
 
 // 로그인
 export const useLogin = () => {

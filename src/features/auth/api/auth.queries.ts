@@ -3,7 +3,7 @@ import {
   getInterestCategoriesApi,
   getFeedbackCategoriesApi,
   getSelfIntroCategoriesApi,
-} from './api/auth';
+} from './auth';
 
 // 관심사 카테고리 조회
 export const useGetInterestCategories = () => {

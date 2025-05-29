@@ -1,4 +1,4 @@
-import { GenderSelectorProps } from '@/features/auth/auth.types';
+import { GenderSelectorProps } from '@/features/auth/types/ui.types';
 import { BaseSelector } from '@/shared/components/ui/base-selector';
 import { Mars, Venus } from 'lucide-react';
 
@@ -19,12 +19,12 @@ export default function GenderSelector({
     >
       {[
         {
-          value: '남자',
+          value: 'male',
           label: '남성',
           icon: <Mars />,
         },
         {
-          value: '여자',
+          value: 'female',
           label: '여성',
           icon: <Venus />,
         },

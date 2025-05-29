@@ -2,7 +2,11 @@ import Image from 'next/image';
 import naverIcon from '@/assets/icons/naver.png';
 import kakaoIcon from '@/assets/icons/kakao.png';
 import googleIcon from '@/assets/icons/google.png';
-import { SocialProvider, SocialConfig, SocialLoginButtonProps } from '@/features/auth/auth.types';
+import {
+  SocialProvider,
+  SocialConfig,
+  SocialLoginButtonProps,
+} from '@/features/auth/types/ui.types';
 
 const socialConfig: Record<SocialProvider, SocialConfig> = {
   naver: {

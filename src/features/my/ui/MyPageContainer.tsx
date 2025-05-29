@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import Spinner from '@/shared/components/ui/spinner';
 import { Button } from '@/shared/components/ui/button';
-import { useLogout } from '@/features/auth/auth.mutations';
+import { useLogout } from '@/features/auth/api/auth.mutations';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 import defaultProfileImage from '@/assets/images/default.png';
@@ -34,9 +34,7 @@ export default function MyPageContainer() {
     setIsLoading(false);
   }, [user, router]);
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   return (
     <main className="flex min-h-[calc(100vh-160px)] w-full flex-col bg-gradient-to-br from-violet-50 via-white to-rose-50">

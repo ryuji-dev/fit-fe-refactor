@@ -1,4 +1,3 @@
-import { fetcher } from '@/shared/lib/fetcher';
 import {
   LoginRequest,
   LoginResponse,
@@ -6,7 +5,8 @@ import {
   SignupResponse,
   CheckEmailResponse,
   CategoryItem,
-} from '@/features/auth/api/api.types';
+} from '@/features/auth/types/api.types';
+import { fetcher } from '@/shared/lib/fetcher';
 
 // 로그인
 export const loginApi = async (data: LoginRequest): Promise<LoginResponse> => {

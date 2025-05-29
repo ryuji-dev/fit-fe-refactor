@@ -3,7 +3,7 @@ import {
   useCheckEmailDuplication,
   useSendEmailVerificationCode,
   useVerifyEmailCode,
-} from '@/features/auth/auth.mutations';
+} from '@/features/auth/api/auth.mutations';
 
 export const useEmailVerification = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);

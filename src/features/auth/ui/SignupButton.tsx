@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Spinner from '@/shared/components/ui/spinner';
-import { SignupButtonProps, SignupSubmitButtonProps } from '@/features/auth/auth.types';
+import { SignupButtonProps, SignupSubmitButtonProps } from '@/features/auth/types/ui.types';
 
 export function SignupButton({
   variant = 'primary',

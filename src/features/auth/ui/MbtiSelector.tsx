@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronDown } from 'lucide-react';
-import { MbtiSelectorProps } from '@/features/auth/auth.types';
+import { MbtiSelectorProps } from '@/features/auth/types/ui.types';
 import { useFormContext } from 'react-hook-form';
 
 const MBTI_OPTIONS = [

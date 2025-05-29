@@ -7,7 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupFormValues } from '@/entities/auth/signup.types';
 import { signupSchema } from '@/entities/auth/signup.schema';
-import { SignupRequest } from '@/features/auth/api/api.types';
+import { SignupRequest } from '@/features/auth/types/api.types';
 import { useSignup } from '@/features/auth/api/auth.mutations';
 import {
   useGetInterestCategories,

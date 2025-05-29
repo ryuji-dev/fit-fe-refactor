@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 const PUBLIC_ENDPOINTS = [
   '/auth/login',
   '/auth/find-email',
@@ -68,7 +70,11 @@ export async function fetcher<T>(endpoint: string, options?: RequestInit): Promi
 
       const error = new FetchError(response.status, getErrorMessage(response.status), errorData);
 
-      if (response.status === 401 && !PUBLIC_ENDPOINTS.some((path) => endpoint.startsWith(path))) {
+      if (
+        response.status === 401 &&
+        !PUBLIC_ENDPOINTS.some((path) => endpoint.startsWith(path)) &&
+        Cookies.get('isAuthenticated') === 'true'
+      ) {
         window.location.href = '/auth';
       }
 

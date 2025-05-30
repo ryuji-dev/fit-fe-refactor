@@ -19,3 +19,9 @@ export interface MemberFilterDialogProps {
   onApply: (filters: MemberFilters) => void;
   initialFilters?: MemberFilters;
 }
+
+export const DEFAULT_MEMBER_FILTERS: MemberFilters = {
+  region: '',
+  ageRange: [20, 60],
+  likesRange: [0, 100],
+};

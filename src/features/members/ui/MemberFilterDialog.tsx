@@ -1,24 +1,41 @@
 'use client';
 
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { MemberFilters, MemberFilterDialogProps } from '@/features/members/types/ui.types';
+import {
+  MemberFilters,
+  MemberFilterDialogProps,
+  DEFAULT_MEMBER_FILTERS,
+} from '@/features/members/types/ui.types';
 import Dialog from '@/shared/components/ui/dialog';
 import { RangeSlider } from '@/shared/components/ui/range-slider';
 import { Button } from '@/shared/components/ui/button';
 import MemberFilterRegionSelector from './MemberFilterRegionSelector';
 
-export default function MemberFilterDialog({ isOpen, onClose, onApply }: MemberFilterDialogProps) {
+export default function MemberFilterDialog({
+  isOpen,
+  onClose,
+  onApply,
+  initialFilters,
+}: MemberFilterDialogProps) {
   const methods = useForm<MemberFilters>({
-    defaultValues: {
-      region: '',
-      ageRange: [20, 60],
-      likesRange: [0, 100],
-    },
+    defaultValues: initialFilters ?? DEFAULT_MEMBER_FILTERS,
   });
+
+  useEffect(() => {
+    if (isOpen && initialFilters) {
+      methods.reset(initialFilters);
+    }
+  }, [isOpen, initialFilters, methods]);
 
   const onSubmit = (data: MemberFilters) => {
     onApply(data);
     onClose();
+  };
+
+  const handleReset = () => {
+    methods.reset(DEFAULT_MEMBER_FILTERS);
+    onApply(DEFAULT_MEMBER_FILTERS);
   };
 
   if (!isOpen) return null;
@@ -56,7 +73,7 @@ export default function MemberFilterDialog({ isOpen, onClose, onApply }: MemberF
             <RangeSlider
               min={0}
               max={100}
-              step={10}
+              step={1}
               value={methods.watch('likesRange')}
               onValueChange={(value) => methods.setValue('likesRange', value as [number, number])}
             />
@@ -66,8 +83,8 @@ export default function MemberFilterDialog({ isOpen, onClose, onApply }: MemberF
             </div>
           </div>
           <div className="flex justify-end gap-2">
-            <Button type="button" onClick={onClose} variant="outline">
-              취소
+            <Button type="button" onClick={handleReset} variant="outline">
+              초기화
             </Button>
             <Button type="submit" variant="default">
               적용

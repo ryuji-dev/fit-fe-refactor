@@ -17,4 +17,5 @@ export interface MemberFilterDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onApply: (filters: MemberFilters) => void;
+  initialFilters?: MemberFilters;
 }

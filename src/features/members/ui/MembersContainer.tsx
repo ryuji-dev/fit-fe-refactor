@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
+import { UserProfile } from '@/features/members/types/api.types';
 import { MemberFilters } from '@/features/members/types/ui.types';
+import { useGetPublicUserList, useGetUserList } from '@/features/members/api/members.queries';
 import Spinner from '@/shared/components/ui/spinner';
 import { BasicProfileCard } from '@/shared/components/ui/profile-card';
-import MemberFilterDialog from './MemberFilterDialog';
-import { useGetPublicUserList, useGetUserList } from '../api/members.queries';
 import { useAuthStore } from '@/store/authStore';
-import { UserProfile } from '../types/api.types';
+import MemberFilterDialog from './MemberFilterDialog';
 
 export default function MembersContainer() {
   const { isAuthenticated } = useAuthStore();
@@ -18,6 +18,8 @@ export default function MembersContainer() {
     ageRange: [20, 50],
     likesRange: [0, 500],
   });
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // 로그인 상태에 따라 적절한 API 호출
   const {
@@ -40,12 +42,36 @@ export default function MembersContainer() {
   const fetchNextPage = isAuthenticated ? fetchNextPrivatePage : fetchNextPublicPage;
   const hasNextPage = isAuthenticated ? hasNextPrivatePage : hasNextPublicPage;
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop <= clientHeight * 1.5 && hasNextPage) {
-      fetchNextPage();
+  // Intersection Observer를 사용한 무한 스크롤 구현
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // 감지된 요소가 화면에 보이고, 다음 페이지가 있으며, 로딩 중이 아닐 때만 API 호출
+        if (entries[0].isIntersecting && hasNextPage && !isLoading) {
+          fetchNextPage();
+        }
+      },
+      {
+        root: null, // 뷰포트를 기준으로 감지
+        rootMargin: '100px', // 요소가 화면 하단에서 100px 떨어졌을 때 미리 감지 (미리 로딩 시작)
+        threshold: 0.1, // 요소가 10% 이상 보일 때 감지
+      },
+    );
+
+    // 로딩 요소가 있으면 관찰 시작
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
     }
-  };
+
+    observerRef.current = observer;
+
+    // 컴포넌트 언마운트 시 observer 정리 (메모리 누수 방지)
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [hasNextPage, fetchNextPage, isLoading]);
 
   const handleApplyFilters = (newFilters: MemberFilters) => {
     setFilters(newFilters);
@@ -59,10 +85,7 @@ export default function MembersContainer() {
           <p className="mt-4 text-sm text-zinc-500">회원 목록을 불러오는 중...</p>
         </div>
       ) : (
-        <div
-          className="scrollbar-hide container mx-auto mb-16 max-h-[calc(100vh-160px)] overflow-y-auto px-6 py-8"
-          onScroll={handleScroll}
-        >
+        <div className="scrollbar-hide container mx-auto mb-16 max-h-[calc(100vh-160px)] overflow-y-auto px-6 py-8">
           <header className="mb-12">
             <div className="relative flex items-center justify-center">
               <h1 className="text-2xl font-bold text-zinc-900">회원 목록</h1>
@@ -97,11 +120,14 @@ export default function MembersContainer() {
             )}
           </section>
 
-          {hasNextPage && (
-            <div className="mt-8 flex justify-center">
-              <Spinner size="md" />
-            </div>
-          )}
+          {/* 무한 스크롤 감지를 위한 요소 (Intersection Observer가 이 요소를 관찰) */}
+          <div ref={loadMoreRef} className="h-4 w-full">
+            {hasNextPage && (
+              <div className="mt-8 flex justify-center">
+                <Spinner size="md" />
+              </div>
+            )}
+          </div>
 
           <MemberFilterDialog
             isOpen={isFilterOpen}

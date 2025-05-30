@@ -16,3 +16,11 @@ export interface UserProfileList {
   users: UserProfile[];
   nextCursor: string | null;
 }
+
+export interface FilteredUserListParams extends PaginationParams {
+  region: string;
+  ageMin: number;
+  ageMax: number;
+  minLikes: number;
+  maxLikes: number;
+}

@@ -39,16 +39,7 @@ export const useGetPublicFilteredUserList = (
         take: TAKE,
       }),
     initialPageParam: null as string | null,
-    getNextPageParam: (lastPage, allPages) => {
-      // 모든 유저 id를 flat하게 모음
-      const allUserIds = allPages.flatMap((page) => page.users.map((u) => u.id));
-      // 마지막 페이지의 유저 id가 이미 allUserIds에 다 포함되어 있으면 중단
-      const isAllDuplicated = lastPage.users.every(
-        (u) => allUserIds.filter((id) => id === u.id).length > 1,
-      );
-      if (isAllDuplicated) return undefined;
-      return lastPage.nextCursor;
-    },
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 };
 

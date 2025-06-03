@@ -19,25 +19,28 @@ import Spinner from '@/shared/components/ui/spinner';
 import { useAuthStore } from '@/store/authStore';
 import defaultProfileImage from '@/assets/images/default.png';
 import { Skeleton } from '@/shared/components/ui/skeleton';
+import useHydrated from '@/shared/hooks/useHydrated';
 
 export default function MyPageContainer() {
   const [isLoading, setIsLoading] = useState(true);
   const logout = useLogout();
   const router = useRouter();
+  const hydrated = useHydrated();
   const user = useAuthStore((state) => state.user);
   const { data: myProfile, isLoading: isLoadingMyProfile } = useGetMyMiniProfile();
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {};
 
   useEffect(() => {
+    if (!hydrated) return;
     if (!user) {
       router.push('/auth');
       return;
     }
     setIsLoading(false);
-  }, [user, router]);
+  }, [hydrated, user, router]);
 
-  if (!user) return null;
+  if (!user || !hydrated) return null;
 
   const { nickname, email, profileImage } = myProfile || {};
 

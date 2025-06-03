@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Spinner from '@/shared/components/ui/spinner';
+import useHydrated from '@/shared/hooks/useHydrated';
 import { useAuthStore } from '@/store/authStore';
 import ChatRoomCard from './ChatRoomCard';
 
@@ -90,19 +91,21 @@ const chatsMockData: ChatsProfile[] = [
 export default function ChatsContainer() {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const hydrated = useHydrated();
   const user = useAuthStore((state) => state.user);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {};
 
   useEffect(() => {
+    if (!hydrated) return;
     if (!user) {
       router.push('/auth');
       return;
     }
     setIsLoading(false);
-  }, [user, router]);
+  }, [hydrated, user, router]);
 
-  if (!user) return null;
+  if (!user || !hydrated) return null;
 
   return (
     <main className="flex min-h-[calc(100vh-160px)] w-full flex-col bg-gradient-to-br from-violet-50 via-white to-rose-50">

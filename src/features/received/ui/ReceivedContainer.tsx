@@ -2,92 +2,48 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ReceivedProfile } from '@/features/received/types/ui.types';
 import Spinner from '@/shared/components/ui/spinner';
+import useHydrated from '@/shared/hooks/useHydrated';
 import { useAuthStore } from '@/store/authStore';
 import ReceivedProfileSection from './ReceivedProfileSection';
+import { useGetReceivedList } from '../api/received.queries';
+import { UserProfile } from '@/features/members/types/api.types';
 
-export interface ReceivedProfile {
-  id: string;
-  name: string;
-  age: number;
-  location: string;
-  likes: number;
-  imageUrl: string;
-  isOnline: boolean;
-}
-
-const receivedMockData: ReceivedProfile[] = [
-  {
-    id: 'received-1',
-    name: '김지은',
-    age: 24,
-    location: '서울',
-    likes: 320,
-    imageUrl:
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80',
-    isOnline: true,
-  },
-  {
-    id: 'received-2',
-    name: '이민준',
-    age: 27,
-    location: '부산',
-    likes: 210,
-    imageUrl:
-      'https://images.unsplash.com/photo-1596940872506-6d16d1b06fb0?auto=format&fit=crop&w=400&q=80',
-    isOnline: false,
-  },
-  {
-    id: 'received-3',
-    name: '박수진',
-    age: 25,
-    location: '인천',
-    likes: 150,
-    imageUrl:
-      'https://images.unsplash.com/photo-1739133783212-e1c93795d9c7?auto=format&fit=crop&w=400&q=80',
-    isOnline: true,
-  },
-  {
-    id: 'received-4',
-    name: '최현우',
-    age: 26,
-    location: '대구',
-    likes: 480,
-    imageUrl:
-      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80',
-    isOnline: false,
-  },
-  {
-    id: 'received-5',
-    name: '정민서',
-    age: 23,
-    location: '서울',
-    likes: 390,
-    imageUrl:
-      'https://images.unsplash.com/photo-1701351382146-035bd68cdb6d?auto=format&fit=crop&w=400&q=80',
-    isOnline: true,
-  },
-];
+// 받은 호감 목록 데이터를 UI 타입으로 변환하는 함수
+const toReceivedProfile = (profile: UserProfile & { isSuccess?: boolean }): ReceivedProfile => ({
+  id: profile.id,
+  name: profile.nickname,
+  age: profile.age || 0,
+  location: profile.region,
+  likes: profile.likeCount,
+  imageUrl: profile.profileImage,
+  isOnline: false, // TODO: 온라인 상태 정보가 API에 추가되면 업데이트 필요
+  isSuccess: profile.isSuccess,
+});
 
 export default function ReceivedContainer() {
-  const [isLoading, setIsLoading] = useState(true);
   const [showMoreMatches, setShowMoreMatches] = useState(false);
   const [showMoreLikes, setShowMoreLikes] = useState(false);
   const [showMoreCoffeeChats, setShowMoreCoffeeChats] = useState(false);
   const router = useRouter();
+  const hydrated = useHydrated();
   const user = useAuthStore((state) => state.user);
-
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {};
+  const { data: receivedData, isLoading } = useGetReceivedList();
 
   useEffect(() => {
+    if (!hydrated) return;
     if (!user) {
       router.push('/auth');
       return;
     }
-    setIsLoading(false);
-  }, [user, router]);
+  }, [hydrated, user, router]);
 
-  if (!user) return null;
+  if (!user || !hydrated) return null;
+
+  const matchProfiles = receivedData?.matchList.map(toReceivedProfile) || [];
+  const likeProfiles = receivedData?.likeList.map(toReceivedProfile) || [];
+  const coffeeChatProfiles = receivedData?.coffeeChatList.map(toReceivedProfile) || [];
 
   return (
     <main className="flex min-h-[calc(100vh-160px)] w-full flex-col bg-gradient-to-br from-violet-50 via-white to-rose-50">
@@ -97,10 +53,7 @@ export default function ReceivedContainer() {
           <p className="mt-4 text-sm text-zinc-500">받은 호감 목록을 불러오는 중...</p>
         </div>
       ) : (
-        <div
-          className="scrollbar-hide container mx-auto mb-16 max-h-[calc(100vh-160px)] overflow-y-auto px-6 py-8"
-          onScroll={handleScroll}
-        >
+        <div className="scrollbar-hide container mx-auto mb-16 max-h-[calc(100vh-160px)] overflow-y-auto px-6 py-8">
           <header className="mb-12">
             <div className="relative flex items-center justify-center">
               <h1 className="text-2xl font-bold text-zinc-900">받은 호감</h1>
@@ -112,29 +65,29 @@ export default function ReceivedContainer() {
 
           <ReceivedProfileSection
             title="선택 받은 매칭"
-            profiles={receivedMockData}
+            profiles={matchProfiles}
             showMore={showMoreMatches}
             onToggleShowMore={() => setShowMoreMatches(!showMoreMatches)}
             isActionCard
-            onAccept={(id) => console.log('매칭 수락:', id)}
-            onReject={(id) => console.log('매칭 거절:', id)}
+            onAccept={(id: string) => console.log('매칭 수락:', id)}
+            onReject={(id: string) => console.log('매칭 거절:', id)}
           />
 
           <ReceivedProfileSection
             title="받은 호감"
-            profiles={receivedMockData}
+            profiles={likeProfiles}
             showMore={showMoreLikes}
             onToggleShowMore={() => setShowMoreLikes(!showMoreLikes)}
           />
 
           <ReceivedProfileSection
             title="신청 받은 커피챗"
-            profiles={receivedMockData}
+            profiles={coffeeChatProfiles}
             showMore={showMoreCoffeeChats}
             onToggleShowMore={() => setShowMoreCoffeeChats(!showMoreCoffeeChats)}
             isActionCard
-            onAccept={(id) => console.log('커피챗 수락:', id)}
-            onReject={(id) => console.log('커피챗 거절:', id)}
+            onAccept={(id: string) => console.log('커피챗 수락:', id)}
+            onReject={(id: string) => console.log('커피챗 거절:', id)}
           />
         </div>
       )}

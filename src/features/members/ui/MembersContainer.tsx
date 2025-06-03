@@ -8,6 +8,7 @@ import {
   useGetPublicUserList,
   useGetUserList,
   useGetPublicFilteredUserList,
+  useGetFilteredUserList,
 } from '@/features/members/api/members.queries';
 import Spinner from '@/shared/components/ui/spinner';
 import { BasicProfileCard } from '@/shared/components/ui/profile-card';
@@ -35,6 +36,25 @@ export default function MembersContainer() {
     maxLikes: filters.likesRange[1],
   });
 
+  // 필터된 로그인 회원목록 조회
+  const {
+    data: filteredPrivateUserList,
+    isLoading: isFilteredPrivateLoading,
+    fetchNextPage: fetchNextFilteredPrivatePage,
+    hasNextPage: hasNextFilteredPrivatePage,
+  } = useGetFilteredUserList(
+    {
+      region: filters.region,
+      ageMin: filters.ageRange[0],
+      ageMax: filters.ageRange[1],
+      minLikes: filters.likesRange[0],
+      maxLikes: filters.likesRange[1],
+    },
+    {
+      enabled: isAuthenticated,
+    },
+  );
+
   // 로그인 상태에 따라 적절한 API 호출
   const {
     data: publicUserList,
@@ -61,28 +81,36 @@ export default function MembersContainer() {
 
   // 현재 로딩 상태를 판별 (로그인/비로그인, 필터 적용 여부에 따라 다름)
   const isLoading = isAuthenticated
-    ? isPrivateLoading // 로그인 시: 개인 회원목록 로딩
+    ? isFilterActive
+      ? isFilteredPrivateLoading
+      : isPrivateLoading
     : isFilterActive
-      ? isFilteredPublicLoading // 비로그인 + 필터 적용 시: 필터된 회원목록 로딩
-      : isPublicLoading; // 비로그인 + 필터 미적용 시: 전체 회원목록 로딩
+      ? isFilteredPublicLoading
+      : isPublicLoading;
 
   // 현재 보여줄 회원목록 데이터 (로그인/비로그인, 필터 적용 여부에 따라 다름)
   const userList = isAuthenticated
-    ? privateUserList // 로그인 시: 개인 회원목록
+    ? isFilterActive
+      ? filteredPrivateUserList
+      : privateUserList
     : isFilterActive
-      ? filteredPublicUserList // 비로그인 + 필터 적용 시: 필터된 회원목록
-      : publicUserList; // 비로그인 + 필터 미적용 시: 전체 회원목록
+      ? filteredPublicUserList
+      : publicUserList;
 
-  // 무한 스크롤 시 다음 페이지를 불러오는 함수 (상태에 따라 적절한 fetch 함수 사용)
+  // 무한 스크롤 시 다음 페이지를 불러오는 함수
   const fetchNextPage = isAuthenticated
-    ? fetchNextPrivatePage
+    ? isFilterActive
+      ? fetchNextFilteredPrivatePage
+      : fetchNextPrivatePage
     : isFilterActive
       ? fetchNextFilteredPublicPage
       : fetchNextPublicPage;
 
-  // 다음 페이지가 존재하는지 여부 (상태에 따라 적절한 hasNextPage 사용)
+  // 다음 페이지가 존재하는지 여부
   const hasNextPage = isAuthenticated
-    ? hasNextPrivatePage
+    ? isFilterActive
+      ? hasNextFilteredPrivatePage
+      : hasNextPrivatePage
     : isFilterActive
       ? hasNextFilteredPublicPage
       : hasNextPublicPage;

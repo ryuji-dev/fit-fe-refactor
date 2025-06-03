@@ -1,6 +1,11 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getPublicUserListApi, getUserListApi, getPublicFilteredUserListApi } from './members';
-import { FilteredUserListParams } from '../types/api.types';
+import { FilteredUserListParams } from '@/features/members/types/api.types';
+import {
+  getPublicUserListApi,
+  getUserListApi,
+  getPublicFilteredUserListApi,
+  getFilteredUserListApi,
+} from './members';
 
 const TAKE = 6;
 
@@ -44,3 +49,20 @@ export const useGetPublicFilteredUserList = (
 };
 
 // 필터된 로그인 회원목록 조회
+export const useGetFilteredUserList = (
+  filters: Omit<FilteredUserListParams, 'cursor' | 'take'>,
+  options?: { enabled?: boolean },
+) => {
+  return useInfiniteQuery({
+    queryKey: ['filteredUserList', filters],
+    queryFn: ({ pageParam }) =>
+      getFilteredUserListApi({
+        ...filters,
+        cursor: pageParam as string | null,
+        take: TAKE,
+      }),
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    enabled: options?.enabled,
+  });
+};

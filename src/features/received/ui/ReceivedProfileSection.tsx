@@ -1,7 +1,7 @@
 import { ChevronDown } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { ReceivedProfileSectionProps } from '@/features/received/types/ui.types';
 import { BasicProfileCard, ActionProfileCard } from '@/shared/components/ui/profile-card';
-import { ReceivedProfileSectionProps } from '../received.types';
 
 const useMediaQuery = (query: string): boolean => {
   const [matches, setMatches] = useState(false);

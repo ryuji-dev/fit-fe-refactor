@@ -6,9 +6,9 @@ import { ReceivedProfile } from '@/features/received/types/ui.types';
 import Spinner from '@/shared/components/ui/spinner';
 import useHydrated from '@/shared/hooks/useHydrated';
 import { useAuthStore } from '@/store/authStore';
-import ReceivedProfileSection from './ReceivedProfileSection';
-import { useGetReceivedList } from '../api/received.queries';
+import { useGetReceivedList } from '@/features/received/api/received.queries';
 import { UserProfile } from '@/features/members/types/api.types';
+import ReceivedProfileSection from './ReceivedProfileSection';
 
 // 받은 호감 목록 데이터를 UI 타입으로 변환하는 함수
 const toReceivedProfile = (profile: UserProfile & { isSuccess?: boolean }): ReceivedProfile => ({

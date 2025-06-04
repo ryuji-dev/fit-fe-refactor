@@ -33,7 +33,7 @@ const THIRTY_MINUTES = 30 * 60 * 1000;
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isAuthenticated: false,
       expiresAt: null,
@@ -58,6 +58,16 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: !!minimalUser,
           expiresAt: minimalUser ? Date.now() + THIRTY_MINUTES : null,
         });
+
+        // 30분 후에 한 번만 만료 체크
+        if (minimalUser) {
+          setTimeout(() => {
+            const state = get();
+            if (state.expiresAt && Date.now() > state.expiresAt) {
+              set({ user: null, isAuthenticated: false, expiresAt: null });
+            }
+          }, THIRTY_MINUTES);
+        }
       },
       logout: () => {
         set({ user: null, isAuthenticated: false, expiresAt: null });
@@ -81,3 +91,14 @@ export const useAuthStore = create<AuthState>()(
     },
   ),
 );
+
+// 스토어 초기화 시 만료 시간 체크
+const checkInitialExpiration = () => {
+  const state = useAuthStore.getState();
+  if (state.expiresAt && Date.now() > state.expiresAt) {
+    useAuthStore.getState().logout();
+  }
+};
+
+// 앱 시작 시 초기 체크 실행
+checkInitialExpiration();

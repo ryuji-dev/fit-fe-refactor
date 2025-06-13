@@ -95,7 +95,7 @@ export default function ChatsContainer() {
               </>
             ) : (
               <div className="flex min-h-[calc(100vh-400px)] flex-col items-center justify-center">
-                <MessageCircleWarning className="h-32 w-32 text-yellow-300" />
+                <MessageCircleWarning className="h-32 w-32 text-gray-300" />
                 <p className="pb-8 pt-2 text-center text-sm text-zinc-500">
                   아직 채팅방이 없습니다.
                 </p>
